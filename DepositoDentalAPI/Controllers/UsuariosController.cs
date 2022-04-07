@@ -29,7 +29,7 @@ namespace DepositoDentalAPI.Controllers
         }
 
         // GET api/<UsuariosController>/5
-        [HttpGet("{id}", Name = "getCategoria")]
+        [HttpGet("{id}", Name = "getUsuario")]
         public async Task<ActionResult<UsuarioDTO>> Get(int id)
         {
 
