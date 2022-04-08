@@ -28,7 +28,6 @@ namespace DepositoDentalAPI.Controllers
         }
         // GET: api/<CategoriaController>
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<List<ProductoDTO>>> Get()
         {
             return await GetBase<Producto, ProductoDTO>();
@@ -54,6 +53,7 @@ namespace DepositoDentalAPI.Controllers
 
         // POST api/<CategoriaController>
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Post([FromForm] ProductoCreacionDTO productoCreacionDTO)
         {
             var rutaImagen = "";
@@ -83,6 +83,7 @@ namespace DepositoDentalAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Put(int id, [FromForm] ProductoCreacionDTO productoCreacionDTO)
         {
             var rutaImagen = "";
@@ -128,6 +129,7 @@ namespace DepositoDentalAPI.Controllers
 
         // DELETE api/<CategoriaController>/5
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
 

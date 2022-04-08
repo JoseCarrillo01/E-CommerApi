@@ -10,7 +10,7 @@ namespace DepositoDentalAPI.DTOs.Orden
 
         public double GranTotal { get; set; }
 
-        public string Estado { get; set; }
+        public string? Estado { get; set; }
 
         [StringLength(50)]
         public string? Notas { get; set; }
@@ -20,11 +20,11 @@ namespace DepositoDentalAPI.DTOs.Orden
 
         public DateTime? FechaEntrega { get; set; }
 
-        public string nonce { get; set; }
+        public string? nonce { get; set; }
 
         public int UsuarioId { get; set; }
 
-        public List<DetalleOrdenCreacionDTO> detalles { get; set; }
+        public List<DetalleOrdenCreacionDTO>? detalles { get; set; }
 
     }
 }

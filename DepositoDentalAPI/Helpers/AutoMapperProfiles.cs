@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DepositoDentalAPI.DTOs.Categoria;
+using DepositoDentalAPI.DTOs.DetalleOrden;
 using DepositoDentalAPI.DTOs.Orden;
 using DepositoDentalAPI.DTOs.Producto;
 using DepositoDentalAPI.DTOs.Usuario;
@@ -26,11 +27,19 @@ namespace DepositoDentalAPI.Helpers
 
             //Orden
             CreateMap<OrdenCreacionDTO, Orden>().ReverseMap();
+            CreateMap<Orden, OrdenDTO>().ReverseMap();
 
             //Usuarios
             CreateMap<Usuario, UsuarioDTO>().ReverseMap();
             CreateMap<UsuarioCreacionDTO, Usuario>().ReverseMap();
+
+            //DetalleOrden
+            CreateMap<DetalleOrden, DetalleOrdenDTO>();
+
+
         }
+
+
 
         //Metodo para mapear la List<CategoriaDTO> dentro de productoDetalleDTO
         private List<CategoriaDTO> MapCategoriaProducto(Producto producto, ProductoDTO productoDTO)

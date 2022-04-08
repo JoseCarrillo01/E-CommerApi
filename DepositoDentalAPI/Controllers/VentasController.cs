@@ -5,6 +5,7 @@ using DepositoDentalAPI.DTOs.Orden;
 using DepositoDentalAPI.Entity;
 using DepositoDentalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -41,10 +42,70 @@ namespace DepositoDentalAPI.Controllers
         }
 
         // POST api/<PagosController>
-        [HttpPost]
-        public async Task<ActionResult> Post(OrdenCreacionDTO ordenCreacionDTO)
+        [HttpPost] //Final
+        public async Task<ActionResult> PostPreVenta(OrdenCreacionDTO ordenCreacionDTO)
         {
+
+            if (ordenCreacionDTO == null)
+            {
+                return BadRequest();
+            }
+
+            var entidad = mapper.Map<Orden>(ordenCreacionDTO); //Mappeamos creacionDTO A generico Entidad 
+
+            dbContext.ordenes.Add(entidad);
+
+            await dbContext.SaveChangesAsync();
+
+            foreach (var detallesLista in ordenCreacionDTO.detalles)
+            {
+                var detalleOrden = new DetalleOrden() { };
+                detalleOrden.OrdenId = entidad.Id;
+                detalleOrden.ProductoId = detallesLista.ProductoId;
+                detalleOrden.Cantidad = detallesLista.Cantidad;
+                detalleOrden.PrecioUnitario = detallesLista.PrecioUnitario;
+                dbContext.detallesOrden.Add(detalleOrden);
+                await dbContext.SaveChangesAsync();
+
+            }
+            return Ok();
+
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteVenta(int id)
+        {
+            var existe = await dbContext.ordenes.AnyAsync(x => x.Id == id);
+
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            dbContext.Remove(new Orden() { Id = id });
+            await dbContext.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPost("generarVenta/{id}")] //Final
+        public async Task<ActionResult> PostVenta(int id,OrdenCreacionDTO ordenCreacionDTO)
+        {
+            Console.WriteLine(id);
+
             Console.WriteLine(ordenCreacionDTO.ToString());
+
+            var existe = await dbContext.ordenes.AnyAsync(x => x.Id == id);
+
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            if (ordenCreacionDTO == null)
+            {
+                return BadRequest();
+            }
+
 
             var gateway = _braintreeService.GetGateway();
 
@@ -58,29 +119,12 @@ namespace DepositoDentalAPI.Controllers
                 }
             };
 
-            if (ordenCreacionDTO == null)
-            {
-                return BadRequest();
-            }
+            var orden = mapper.Map<Orden>(ordenCreacionDTO);
+            orden.Id = id;
 
-            var entidad = mapper.Map<Orden>(ordenCreacionDTO); //Mappeamos creacionDTO A generico Entidad 
-
-            dbContext.ordenes.Add(entidad);
+            dbContext.Update(orden);
 
             await dbContext.SaveChangesAsync();
-
-
-            foreach (var detallesLista in ordenCreacionDTO.detalles)
-            {
-                var detalleOrden = new DetalleOrden() { };
-                detalleOrden.OrdenId = entidad.Id;
-                detalleOrden.ProductoId = detallesLista.ProductoId;
-                detalleOrden.Cantidad = detallesLista.Cantidad;
-                detalleOrden.PrecioUnitario = detallesLista.PrecioUnitario;
-                dbContext.detallesOrden.Add(detalleOrden);
-                await dbContext.SaveChangesAsync();
-
-            }
 
             Result<Transaction> result = gateway.Transaction.Sale(request);
 
@@ -90,7 +134,7 @@ namespace DepositoDentalAPI.Controllers
 
             }
 
-            return Ok(new {result,entidad});
+            return Ok(result);
 
         }
     }
