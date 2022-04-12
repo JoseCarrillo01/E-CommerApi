@@ -72,58 +72,7 @@ namespace DepositoDentalAPI.Controllers
             return await DeleteBase<Usuario>(id);
         }
 
-        [HttpGet("Facturas/{id}")]
-       //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Usuario")]
-
-        public async Task<ActionResult<List<OrdenDTO>>> GetAllFacturas(int id)
-        {
-            var existeId = await dbContext.usuarios.AnyAsync(x => x.Id == id);
-
-            if (!existeId)
-            {
-                return BadRequest("No existe un usuario con ese Id");
-            }
-            //To do
-            var ordenes = await dbContext.ordenes.Where(x => x.UsuarioId == id).ToListAsync();
-
-            var ordenesDto = mapper.Map<List<OrdenDTO>>(ordenes);
-
-            return Ok(ordenesDto);
-        }
-
-        [HttpGet("DetalleFactura/{idFactura}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Usuario")]
-
-        public async Task<ActionResult<List<DetalleOrdenDTO>>> GetDetalleFactura(int idFactura)
-        {
-            var existeId = await dbContext.ordenes.AnyAsync(x => x.Id == idFactura);
-
-            if (!existeId)
-            {
-                return BadRequest("No existe una factura con ese Id");
-            }
-
-            //To do
-            var detalleOrdenes = await dbContext.detallesOrden
-                .Select(detalles => new DetalleOrdenDTO
-                {
-                    Id = detalles.Id,
-                    Cantidad = detalles.Cantidad,
-                    ProductoId = detalles.ProductoId,
-                    PrecioUnitario = detalles.PrecioUnitario,
-                    OrdenId = detalles.OrdenId,
-
-                    Descripcion = detalles.producto.Descripcion,
-                    Imagen = detalles.producto.Imagen,
-                    Precio = detalles.producto.Precio,
-                    ProductoNombre = detalles.producto.ProductoNombre 
-                    
-                }).Where(x => x.OrdenId == idFactura).ToListAsync();
-
-
-            return Ok(detalleOrdenes);
-        }
-
+       
 
     }
 }

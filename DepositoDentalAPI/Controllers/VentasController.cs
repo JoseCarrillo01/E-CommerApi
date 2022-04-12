@@ -6,7 +6,6 @@ using DepositoDentalAPI.Entity;
 using DepositoDentalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,8 +41,8 @@ namespace DepositoDentalAPI.Controllers
         }
 
         // POST api/<PagosController>
-        [HttpPost] //Final
-        public async Task<ActionResult> PostPreVenta(OrdenCreacionDTO ordenCreacionDTO)
+        [HttpPost("generarVenta")] //Final
+        public async Task<ActionResult> PreVenta(OrdenCreacionDTO ordenCreacionDTO)
         {
 
             if (ordenCreacionDTO == null)
@@ -72,23 +71,8 @@ namespace DepositoDentalAPI.Controllers
 
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteVenta(int id)
-        {
-            var existe = await dbContext.ordenes.AnyAsync(x => x.Id == id);
-
-            if (!existe)
-            {
-                return NotFound();
-            }
-
-            dbContext.Remove(new Orden() { Id = id });
-            await dbContext.SaveChangesAsync();
-            return NoContent();
-        }
-
         [HttpPost("generarVenta/{id}")] //Final
-        public async Task<ActionResult> PostVenta(int id,OrdenCreacionDTO ordenCreacionDTO)
+        public async Task<ActionResult> PostVenta(int id, OrdenCreacionDTO ordenCreacionDTO)
         {
             Console.WriteLine(id);
 
@@ -137,7 +121,76 @@ namespace DepositoDentalAPI.Controllers
             return Ok(result);
 
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteVenta(int id)
+        {
+            var existe = await dbContext.ordenes.AnyAsync(x => x.Id == id);
+
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            dbContext.Remove(new Orden() { Id = id });
+            await dbContext.SaveChangesAsync();
+            return NoContent();
+        }
+
+       
+    //Usuarios facturas
+    [HttpGet("Facturas/{id}")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Usuario")]
+
+    public async Task<ActionResult<List<OrdenDTO>>> GetAllFacturas(int id)
+    {
+        var existeId = await dbContext.usuarios.AnyAsync(x => x.Id == id);
+
+        if (!existeId)
+        {
+            return BadRequest("No existe un usuario con ese Id");
+        }
+        //To do
+        var ordenes = await dbContext.ordenes.Where(x => x.UsuarioId == id).ToListAsync();
+
+        var ordenesDto = mapper.Map<List<OrdenDTO>>(ordenes);
+
+        return Ok(ordenesDto);
     }
 
-    
+    [HttpGet("Facturas/DetalleFactura/{idFactura}")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Usuario")]
+
+    public async Task<ActionResult<List<DetalleOrdenDTO>>> GetDetalleFactura(int idFactura)
+    {
+        var existeId = await dbContext.ordenes.AnyAsync(x => x.Id == idFactura);
+
+        if (!existeId)
+        {
+            return BadRequest("No existe una factura con ese Id");
+        }
+
+        //To do
+        var detalleOrdenes = await dbContext.detallesOrden
+            .Select(detalles => new DetalleOrdenDTO
+            {
+                Id = detalles.Id,
+                Cantidad = detalles.Cantidad,
+                ProductoId = detalles.ProductoId,
+                PrecioUnitario = detalles.PrecioUnitario,
+                OrdenId = detalles.OrdenId,
+
+                Descripcion = detalles.producto.Descripcion,
+                Imagen = detalles.producto.Imagen,
+                Precio = detalles.producto.Precio,
+                ProductoNombre = detalles.producto.ProductoNombre
+
+            }).Where(x => x.OrdenId == idFactura).ToListAsync();
+
+
+        return Ok(detalleOrdenes);
+    }
+
+    }
+
 }
