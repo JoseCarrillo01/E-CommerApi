@@ -36,6 +36,20 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:secretJWT"])),
         ClockSkew = TimeSpan.Zero
     };
+
+    y.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            if (context.Request.Cookies.ContainsKey("X-Access-Token"))
+            {
+                context.Token = context.Request.Cookies["X-Access-Token"];
+            }
+
+            return Task.CompletedTask;
+        },
+    };
+
 });
 
 
@@ -43,9 +57,10 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddControllers();
 builder.Services.AddCors(options => options.AddPolicy("MyPolicy", builder =>
 {
-    builder.AllowAnyOrigin()
+    builder.SetIsOriginAllowed(origin => true)
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()          
+            .AllowCredentials();
 }));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen( c =>
@@ -73,6 +88,7 @@ builder.Services.AddSwaggerGen( c =>
                     }
      });
 });
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -87,12 +103,13 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 
-app.UseHttpsRedirection();
 
+
+app.UseHttpsRedirection();
+app.MapControllers();
+app.UseCors("MyPolicy");
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseAuthentication();
-app.UseCors("MyPolicy");
-app.MapControllers();
 
 app.Run();

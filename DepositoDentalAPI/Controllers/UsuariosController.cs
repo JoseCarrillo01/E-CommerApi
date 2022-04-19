@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,12 +35,33 @@ namespace DepositoDentalAPI.Controllers
             return await GetBase<Usuario,UsuarioDTO>();
         }
 
+        [HttpGet("rolUsuario")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public Dictionary<string, string> GetRolUsuario()
+        {
+            var TokenInfo = new Dictionary<string, string>();
+
+            var token = Request.Cookies["X-Access-Token"];
+            Console.WriteLine("Rol de usuario"+token);
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(token);
+            var claims = jwtSecurityToken.Claims.ToList();
+            foreach (var claim in claims)
+            {
+                TokenInfo.Add(claim.Type, claim.Value);
+            }
+
+            return TokenInfo;
+
+        }
+
+
         // GET api/<UsuariosController>/5
         [HttpGet("{id}", Name = "getUsuario")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<UsuarioDTO>> Get(int id)
         {
-
             return await GetByIdBase<Usuario, UsuarioDTO>(id);
         }
 

@@ -29,9 +29,9 @@ namespace DepositoDentalAPI.Services
 
             string passwordLogin = Encriptar256.GetSHA256(modelo.Password);
 
-           var usuario =  await dbContext.usuarios.Include(x=>x.rol).Where(x => x.Correo == modelo.Email && x.Password == passwordLogin).FirstOrDefaultAsync();
+           var usuario =  await dbContext.usuarios.Include(x => x.rol).Where(x => x.Correo == modelo.Email && x.Password == passwordLogin).SingleOrDefaultAsync();
            
-            if (usuario == null) return null;
+            if (usuario is null) return null;
 
             return ConstruirToken(usuario); 
 
@@ -66,7 +66,7 @@ namespace DepositoDentalAPI.Services
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                new Claim(ClaimTypes.Email, usuario.Correo),
+                new Claim(ClaimTypes.Name, usuario.Nombre),
                 new Claim(ClaimTypes.Role,usuario.rol.Nombre) //No se recomienda pero en este caso funciona sin errores
 
             };
@@ -79,7 +79,7 @@ namespace DepositoDentalAPI.Services
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiracion = DateTime.UtcNow.AddMinutes(20);
+            var expiracion = DateTime.UtcNow.AddHours(1);
 
             JwtSecurityToken token = new JwtSecurityToken(
               issuer: null,

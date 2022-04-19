@@ -38,14 +38,34 @@ namespace DepositoDentalAPI.Controllers
 
             respuesta = await _usuarioService.auth(model);
 
-            if(respuesta == null)
+            if(respuesta is null)
             {
                 return BadRequest("Usuario o contraseña incorrecta");
             }
-        
-            return Ok(respuesta);
+
+            Response.Cookies.Append("X-Access-Token",respuesta,
+            new CookieOptions() 
+            {
+                Expires = DateTime.UtcNow.AddHours(1),
+                HttpOnly = true, 
+                Secure = true,
+               SameSite = SameSiteMode.None,
+               IsEssential = true
+            });
+
+           // Console.WriteLine(respuesta);
+
+            return Ok();
         }
 
+        [HttpGet("refresh")]
+        public async Task<IActionResult> Refresh()
+        {
+            if (!(Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshToken)))
+                return BadRequest();
+
+            return Ok();
+        }
 
     }
 }
