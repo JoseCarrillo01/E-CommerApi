@@ -13,5 +13,7 @@
         public double Precio { get; set; }
 
         public string? Imagen { get; set; }
+
+        public List<int> categoriaId { get; set; }
     }
 }

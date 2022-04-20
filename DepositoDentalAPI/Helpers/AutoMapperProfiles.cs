@@ -17,7 +17,8 @@ namespace DepositoDentalAPI.Helpers
             CreateMap<CategoriaCreacionDTO, Categoria>().ReverseMap();
 
             //Producto
-            CreateMap<Producto,ProductoDTO>().ReverseMap();
+            CreateMap<Producto,ProductoDTO>()
+             .ForMember(x => x.categoriaId, options => options.MapFrom(MapCategoriaProductoGet));
 
             CreateMap<Producto, ProductoDetalleDTO>()
                 .ForMember(x => x.categorias, options => options.MapFrom(MapCategoriaProducto));
@@ -37,6 +38,23 @@ namespace DepositoDentalAPI.Helpers
             CreateMap<DetalleOrden, DetalleOrdenDTO>();
 
 
+        }
+
+        private List<int> MapCategoriaProductoGet(Producto producto, ProductoDTO productoDTO)
+        {
+            var resultado = new List<int>();
+
+            if (producto.categoriaProductos == null)
+            {
+                return resultado;
+            }
+
+            foreach (var categoriaDelProducto in producto.categoriaProductos)
+            {
+                resultado.Add(categoriaDelProducto.categoriaId);
+            }
+
+            return resultado;
         }
 
 

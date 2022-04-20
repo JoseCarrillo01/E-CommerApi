@@ -30,8 +30,16 @@ namespace DepositoDentalAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ProductoDTO>>> Get()
         {
-            return await GetBase<Producto, ProductoDTO>();
+            var entidades = await dbContext.productos.Include(x => x.categoriaProductos)
+                .ThenInclude(x=>x.categoria)
+                .ToListAsync();
+                
+               
+            var dtos = mapper.Map<List<ProductoDTO>>(entidades); //mapeo de cualquier entidad
+            return dtos;
         }
+
+      
 
         // GET api/<CategoriaController>/5
         [HttpGet("{id}", Name = "getProducto")]
