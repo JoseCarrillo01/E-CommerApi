@@ -2,7 +2,7 @@
 
 namespace DepositoDentalAPI.Entity
 {
-    public class Orden
+    public class Orden:Iid
     {
         public int Id { get; set; }
 

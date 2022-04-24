@@ -13,13 +13,13 @@ namespace DepositoDentalAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VentasController : ControllerBase
+    public class VentasController : CustomBaseController
     {
         private readonly IBraintreeService _braintreeService;
         private readonly IMapper mapper;
         private readonly ApplicationDbContext dbContext;
 
-        public VentasController(IBraintreeService braintreeService,IMapper mapper,ApplicationDbContext dbContext)
+        public VentasController(IBraintreeService braintreeService,IMapper mapper,ApplicationDbContext dbContext):base(mapper,dbContext)
         {
             _braintreeService = braintreeService;
             this.mapper = mapper;
@@ -125,16 +125,9 @@ namespace DepositoDentalAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteVenta(int id)
         {
-            var existe = await dbContext.ordenes.AnyAsync(x => x.Id == id);
+          
 
-            if (!existe)
-            {
-                return NotFound();
-            }
-
-            dbContext.Remove(new Orden() { Id = id });
-            await dbContext.SaveChangesAsync();
-            return NoContent();
+            return await DeleteBase<Orden>(id);
         }
 
        

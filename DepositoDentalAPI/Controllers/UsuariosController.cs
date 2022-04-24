@@ -91,6 +91,9 @@ namespace DepositoDentalAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
+            
+
+
             return await DeleteBase<Usuario>(id);
         }
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DepositoDentalAPI.Entity;
+using DepositoDentalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -95,6 +96,7 @@ namespace DepositoDentalAPI.Controllers
             {
                 return NotFound();
             }
+
 
             dbContext.Remove(new TEntidad() { Id = id });
 

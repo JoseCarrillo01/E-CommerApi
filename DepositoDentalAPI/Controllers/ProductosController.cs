@@ -64,6 +64,7 @@ namespace DepositoDentalAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Post([FromForm] ProductoCreacionDTO productoCreacionDTO)
         {
+            Console.WriteLine(productoCreacionDTO);
             var rutaImagen = "";
 
             if (productoCreacionDTO is null)
@@ -140,8 +141,26 @@ namespace DepositoDentalAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
+            var entidad = await dbContext.productos.FirstOrDefaultAsync(x => x.Id == id);
 
-            return await DeleteBase<Producto>(id);
+            if (entidad == null)
+            {
+                return NotFound();
+            }
+
+            //si la imagen guardada en la base de datos no esta vacia
+            if (entidad.Imagen is not null)
+            {
+                var nombreArr = entidad.Imagen.Split("/");
+                var nombre = nombreArr[nombreArr.Length - 1];
+                var idCloudArr = nombre.Split(".");
+                var idCloud = idCloudArr[0];
+                cloudinary.borrarImagen(idCloud); //borramos la antigua foto
+            }
+
+            dbContext.Remove(new Producto() { Id = id });
+            await dbContext.SaveChangesAsync();
+            return NoContent();
         }
         
     }

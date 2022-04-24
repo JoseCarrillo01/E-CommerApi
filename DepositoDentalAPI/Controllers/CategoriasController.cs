@@ -124,7 +124,26 @@ namespace DepositoDentalAPI.Controllers
         public async Task<ActionResult> Delete(int id)
         {
 
-            return await DeleteBase<Categoria>(id);
+            var entidad = await dbContext.categorias.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entidad == null)
+            {
+                return NotFound();
+            }
+
+            //si la imagen guardada en la base de datos no esta vacia
+            if (entidad.Imagen is not null)
+            {
+                var nombreArr = entidad.Imagen.Split("/");
+                var nombre = nombreArr[nombreArr.Length - 1];
+                var idCloudArr = nombre.Split(".");
+                var idCloud = idCloudArr[0];
+                cloudinary.borrarImagen(idCloud); //borramos la antigua foto
+            }
+
+            dbContext.Remove(new Categoria() { Id = id });
+            await dbContext.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
