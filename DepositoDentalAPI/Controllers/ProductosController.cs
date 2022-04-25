@@ -141,7 +141,7 @@ namespace DepositoDentalAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
-            var entidad = await dbContext.productos.FirstOrDefaultAsync(x => x.Id == id);
+            var entidad = await dbContext.productos.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (entidad == null)
             {
