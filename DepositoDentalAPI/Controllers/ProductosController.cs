@@ -141,6 +141,7 @@ namespace DepositoDentalAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
+            //Comentario Para arreglar heroku
             var entidad = await dbContext.productos.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (entidad == null)
