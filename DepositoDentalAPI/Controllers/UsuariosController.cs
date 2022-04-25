@@ -60,9 +60,9 @@ namespace DepositoDentalAPI.Controllers
         // GET api/<UsuariosController>/5
         [HttpGet("{id}", Name = "getUsuario")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<ActionResult<UsuarioDTO>> Get(int id)
+        public async Task<ActionResult<UsuarioDetalleDTO>> Get(int id)
         {
-            return await GetByIdBase<Usuario, UsuarioDTO>(id);
+            return await GetByIdBase<Usuario, UsuarioDetalleDTO>(id);
         }
 
         // PUT api/<UsuariosController>/5

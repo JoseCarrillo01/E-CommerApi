@@ -124,7 +124,7 @@ namespace DepositoDentalAPI.Controllers
         public async Task<ActionResult> Delete(int id)
         {
 
-            var entidad = await dbContext.categorias.FirstOrDefaultAsync(x => x.Id == id);
+            var entidad = await dbContext.categorias.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (entidad == null)
             {

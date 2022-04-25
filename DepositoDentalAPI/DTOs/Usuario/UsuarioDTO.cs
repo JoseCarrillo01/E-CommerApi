@@ -9,5 +9,7 @@
         public string CodigoPostal { get; set; }
         public string Correo { get; set; }
         public string RFC { get; set; }
+
+  
     }
 }
