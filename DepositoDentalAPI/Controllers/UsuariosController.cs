@@ -4,6 +4,7 @@ using DepositoDentalAPI.DTOs.DetalleOrden;
 using DepositoDentalAPI.DTOs.Orden;
 using DepositoDentalAPI.DTOs.Usuario;
 using DepositoDentalAPI.Entity;
+using DepositoDentalAPI.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -70,6 +71,8 @@ namespace DepositoDentalAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Put(int id, [FromBody] UsuarioCreacionDTO usuarioCreacionDTO)
         {
+            var password = usuarioCreacionDTO.Password;
+            usuarioCreacionDTO.Password = Encriptar256.GetSHA256(password);
             var existe = await dbContext.usuarios.AnyAsync(x => x.Id == id);
 
             if (!existe)
@@ -79,7 +82,7 @@ namespace DepositoDentalAPI.Controllers
 
             var autor = mapper.Map<Usuario>(usuarioCreacionDTO);
             autor.Id = id;
-
+            autor.RolId = 2;
             dbContext.Update(autor);
             await dbContext.SaveChangesAsync();
             return NoContent();
