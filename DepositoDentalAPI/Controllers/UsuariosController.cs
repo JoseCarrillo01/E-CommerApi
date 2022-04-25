@@ -65,9 +65,9 @@ namespace DepositoDentalAPI.Controllers
             return await GetByIdBase<Usuario, UsuarioDetalleDTO>(id);
         }
 
-        // PUT api/<UsuariosController>/5
+        // TODOS 
         [HttpPut("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Usuario")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Put(int id, [FromBody] UsuarioCreacionDTO usuarioCreacionDTO)
         {
             var existe = await dbContext.usuarios.AnyAsync(x => x.Id == id);
@@ -87,8 +87,9 @@ namespace DepositoDentalAPI.Controllers
         }
 
         // DELETE api/<UsuariosController>/5
+        //TODOS
         [HttpDelete("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Delete(int id)
         {
             
