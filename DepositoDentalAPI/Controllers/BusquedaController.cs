@@ -24,7 +24,7 @@ namespace DepositoDentalAPI.Controllers
        
 
         // POST: BusquedaController/Create
-        [HttpGet("${modelo}/${termino}")]
+        [HttpGet("{modelo}/{termino}")]
         public async Task<ActionResult>  buscarTodo(string modelo,string termino)
         {
         
