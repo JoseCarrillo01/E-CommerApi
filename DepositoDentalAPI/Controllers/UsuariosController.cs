@@ -128,9 +128,9 @@ namespace DepositoDentalAPI.Controllers
             return await DeleteBase<Usuario>(id);
         }
 
-        [HttpGet("checkPasswords")]
+        [HttpPost("checkPasswords")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> ComprobarPasswords(string password,int id)
+        public async Task<ActionResult> ComprobarPasswords([FromForm] string password,int id)
         {
             password = Encriptar256.GetSHA256(password);
 
