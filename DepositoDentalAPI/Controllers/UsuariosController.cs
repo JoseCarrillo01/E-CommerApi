@@ -130,13 +130,22 @@ namespace DepositoDentalAPI.Controllers
 
         [HttpPost("checkPasswords")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> ComprobarPasswords([FromForm] string password,int id)
+        public async Task<ActionResult> ComprobarPasswords([FromForm] string password)
         {
             password = Encriptar256.GetSHA256(password);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var IdClaim = "";
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                // or
+                IdClaim = identity.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            }
 
-            var entidad = await dbContext.usuarios.FirstOrDefaultAsync(x=> x.Password == password && x.Id == id);
+            var entidad = await dbContext.usuarios.FirstOrDefaultAsync(x => x.Password == password && x.Id == int.Parse(IdClaim));
 
-            if(entidad == null)
+
+            if (entidad == null)
             {
                 return BadRequest("Las contraseñas no coinciden");
             }
