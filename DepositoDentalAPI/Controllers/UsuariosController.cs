@@ -62,7 +62,7 @@ namespace DepositoDentalAPI.Controllers
         // GET api/<UsuariosController>/5
         [HttpGet("{id}", Name = "getUsuario")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<UsuarioDetalleDTO>> Get(int id)
+        public async Task<ActionResult<UsuarioDTO>> Get(int id)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var IdClaim = "";
@@ -77,7 +77,7 @@ namespace DepositoDentalAPI.Controllers
             {
                 return BadRequest("No tienes permiso para realizar esta accion");
             }
-            return await GetByIdBase<Usuario, UsuarioDetalleDTO>(id);
+            return await GetByIdBase<Usuario, UsuarioDTO>(id);
         }
 
         // TODOS 
@@ -128,7 +128,21 @@ namespace DepositoDentalAPI.Controllers
             return await DeleteBase<Usuario>(id);
         }
 
-       
+        [HttpGet("checkPasswords")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> ComprobarPasswords(string password,int id)
+        {
+            password = Encriptar256.GetSHA256(password);
+
+            var entidad = await dbContext.usuarios.FirstOrDefaultAsync(x=> x.Password == password && x.Id == id);
+
+            if(entidad == null)
+            {
+                return BadRequest("Las contraseñas no coinciden");
+            }
+
+            return NoContent();
+        }
 
     }
 }

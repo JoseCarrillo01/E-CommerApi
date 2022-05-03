@@ -32,7 +32,6 @@ namespace DepositoDentalAPI.Helpers
 
             //Usuarios
             CreateMap<Usuario, UsuarioDTO>().ReverseMap();
-            CreateMap<Usuario, UsuarioDetalleDTO>().ReverseMap();
             CreateMap<UsuarioCreacionDTO, Usuario>().ReverseMap();
 
             //DetalleOrden
