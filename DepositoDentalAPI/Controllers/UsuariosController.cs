@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -60,9 +61,22 @@ namespace DepositoDentalAPI.Controllers
 
         // GET api/<UsuariosController>/5
         [HttpGet("{id}", Name = "getUsuario")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UsuarioDetalleDTO>> Get(int id)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var IdClaim = "";
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                // or
+                IdClaim = identity.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            }
+            if(id.ToString() != IdClaim)
+            {
+                return BadRequest("No tienes permiso para realizar esta accion");
+            }
             return await GetByIdBase<Usuario, UsuarioDetalleDTO>(id);
         }
 
@@ -71,6 +85,20 @@ namespace DepositoDentalAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Put(int id, [FromBody] UsuarioCreacionDTO usuarioCreacionDTO)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var IdClaim = "";
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                // or
+                IdClaim = identity.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            }
+            if (id.ToString() != IdClaim)
+            {
+                return BadRequest("No tienes permiso para realizar esta accion");
+            }
+
             var password = usuarioCreacionDTO.Password;
             usuarioCreacionDTO.Password = Encriptar256.GetSHA256(password);
             var existe = await dbContext.usuarios.AnyAsync(x => x.Id == id);
@@ -95,7 +123,6 @@ namespace DepositoDentalAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Delete(int id)
         {
-            
 
 
             return await DeleteBase<Usuario>(id);

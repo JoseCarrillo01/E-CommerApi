@@ -27,8 +27,6 @@ namespace DepositoDentalAPI.Controllers
         [HttpGet("{modelo}/{termino}")]
         public async Task<ActionResult>  buscarTodo(string modelo,string termino)
         {
-        
-
             switch (modelo)
             {
                 case "Usuarios":

@@ -26,7 +26,7 @@ namespace DepositoDentalAPI.Controllers
         }
 
         // GET: api/<CategoriaController>
-        [HttpGet]
+        [HttpGet] 
         public async Task<ActionResult<List<CategoriaDTO>>> Get()
         {
             return await GetBase<Categoria, CategoriaDTO>();
