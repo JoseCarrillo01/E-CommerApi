@@ -30,5 +30,7 @@ namespace DepositoDentalAPI
         public DbSet<CategoriaProducto> categoriaProductos { get; set; }
 
         public DbSet<DetalleOrden> detallesOrden { get; set; }
+
+        public DbSet<Pedido> pedidostabla { get; set; }
     }
 }

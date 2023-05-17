@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\andyo\\source\\repos\\DepositoDentalAPI\\DepositoDentalAPI\\DepositoDentalAPI.csproj": {}
+    "C:\\Users\\Jose Carrillo\\OneDrive\\Escritorio\\Escritorio\\API\\DepositoDentalAPI\\DepositoDentalAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\andyo\\source\\repos\\DepositoDentalAPI\\DepositoDentalAPI\\DepositoDentalAPI.csproj": {
+    "C:\\Users\\Jose Carrillo\\OneDrive\\Escritorio\\Escritorio\\API\\DepositoDentalAPI\\DepositoDentalAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\andyo\\source\\repos\\DepositoDentalAPI\\DepositoDentalAPI\\DepositoDentalAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Jose Carrillo\\OneDrive\\Escritorio\\Escritorio\\API\\DepositoDentalAPI\\DepositoDentalAPI.csproj",
         "projectName": "DepositoDentalAPI",
-        "projectPath": "C:\\Users\\andyo\\source\\repos\\DepositoDentalAPI\\DepositoDentalAPI\\DepositoDentalAPI.csproj",
-        "packagesPath": "C:\\Users\\andyo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\andyo\\source\\repos\\DepositoDentalAPI\\DepositoDentalAPI\\obj\\",
+        "projectPath": "C:\\Users\\Jose Carrillo\\OneDrive\\Escritorio\\Escritorio\\API\\DepositoDentalAPI\\DepositoDentalAPI.csproj",
+        "packagesPath": "C:\\Users\\Jose Carrillo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Jose Carrillo\\OneDrive\\Escritorio\\Escritorio\\API\\DepositoDentalAPI\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\andyo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Jose Carrillo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -85,7 +89,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -97,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200-preview.21617.4\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

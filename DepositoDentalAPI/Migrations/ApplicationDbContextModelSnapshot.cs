@@ -134,6 +134,49 @@ namespace DepositoDentalAPI.Migrations
                     b.ToTable("ordenes");
                 });
 
+            modelBuilder.Entity("DepositoDentalAPI.Entity.Pedido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("aceptado")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("correo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("eliminado")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("precio")
+                        .HasColumnType("float");
+
+                    b.Property<string>("telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("pedidostabla");
+                });
+
             modelBuilder.Entity("DepositoDentalAPI.Entity.Producto", b =>
                 {
                     b.Property<int>("Id")
@@ -278,6 +321,25 @@ namespace DepositoDentalAPI.Migrations
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("usuario");
+                });
+
+            modelBuilder.Entity("DepositoDentalAPI.Entity.Pedido", b =>
+                {
+                    b.HasOne("DepositoDentalAPI.Entity.Producto", "producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DepositoDentalAPI.Entity.Usuario", "usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("producto");
 
                     b.Navigation("usuario");
                 });

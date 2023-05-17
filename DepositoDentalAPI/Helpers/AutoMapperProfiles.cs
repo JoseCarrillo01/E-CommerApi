@@ -2,6 +2,7 @@
 using DepositoDentalAPI.DTOs.Categoria;
 using DepositoDentalAPI.DTOs.DetalleOrden;
 using DepositoDentalAPI.DTOs.Orden;
+using DepositoDentalAPI.DTOs.Pedidos;
 using DepositoDentalAPI.DTOs.Producto;
 using DepositoDentalAPI.DTOs.Usuario;
 using DepositoDentalAPI.Entity;
@@ -11,7 +12,15 @@ namespace DepositoDentalAPI.Helpers
     public class AutoMapperProfiles:Profile
     {
         public AutoMapperProfiles()
+
         {
+
+            CreateMap<Pedido, pedidoDTO>().ReverseMap();
+
+
+            //Pedido
+            CreateMap<CrearPedidoDTO, Pedido>().ReverseMap();
+
             //Categoria
             CreateMap<Categoria, CategoriaDTO>().ReverseMap();
             CreateMap<CategoriaCreacionDTO, Categoria>().ReverseMap();
@@ -84,6 +93,8 @@ namespace DepositoDentalAPI.Helpers
             return resultado;
         }
 
+        
+        //PENDIENTE
         //Metodo para mapear la List<CategoriaProducto> al momento de crear un producto
         private List<CategoriaProducto> MapCategoriaProductos
             (ProductoCreacionDTO productoCreacionDTO, Producto producto)

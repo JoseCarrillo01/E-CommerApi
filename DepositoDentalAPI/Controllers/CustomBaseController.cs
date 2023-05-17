@@ -66,6 +66,7 @@ namespace DepositoDentalAPI.Controllers
              (int id, TCreacion creacionDTO, string rutaImagen) where TEntidad : class, Iid,Iimagen
         {
             var existe = await dbContext.Set<TEntidad>().AsNoTracking().AnyAsync(x => x.Id == id);
+            
 
             if (!existe)
             {
@@ -73,6 +74,10 @@ namespace DepositoDentalAPI.Controllers
             }
 
             var entidad = mapper.Map<TEntidad>(creacionDTO);
+
+            Console.WriteLine(entidad);
+
+  
 
             if (rutaImagen != null && rutaImagen != "")
             {
